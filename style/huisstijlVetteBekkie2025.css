@@ -1,0 +1,192 @@
+body {
+    background-color: rgba(255,255,255,0.8);
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+p {
+    color: #212121;
+}
+h1, h2, h3 {
+    color: #212121;	
+}
+
+h1{
+    font-stretch: expanded;
+}
+
+.container {
+    display: grid;
+    grid-template-areas:
+      "header header header header header header"
+      ". menu menu menu menu ."
+      "reclame_links main main main main reclame_rechts"
+      ". footer footer footer footer .";
+    grid-template-rows: auto auto 1fr 40px;
+    grid-template-columns: 200px repeat(4, 1fr) 200px;    
+    min-height: 100vh;
+}
+
+.container > div {
+    /* extra */
+}
+
+.container > div.header {
+    grid-area: header;
+    text-align: center;
+    padding: 10px;
+    background-color: #FFCC00;
+}
+
+/*-------------------menu--------------------*/
+    .container > div.menu {
+        grid-area: menu;
+        background-color: #D32F2F;
+        border-radius: 6px;
+    }
+
+    .container > div.menu ul {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+    }
+
+    .container > div.menu ul li {
+        list-style: none;
+        position: relative;
+        display: flex; /* Flex voor de lijst-items */
+        background-color: #D32F2F;
+        border-radius: 6px;
+        width: 100%;
+        height: 100%;
+        justify-content: center; 
+        align-items: center;
+    }
+
+    .container > div.menu ul li:hover {
+        background: #FF5722;
+    }
+
+    .container > div.menu ul li a {
+        padding: 10px 15px;
+        display: block;
+        text-decoration: none;
+        color: #FFFFFF;
+        width: 100%;
+        text-align: center;
+    }
+
+    .container > div.menu ul li a:hover {
+        border-radius: 6px;
+    }
+
+    .container > div.menu ul li ul {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #D32F2F;
+        padding: 0;
+        margin: 0;
+        border-radius: 6px;
+        box-shadow: 0px 20px 100px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        transition: visibility 0.3s, opacity 0.3s;
+        display: flex; 
+        flex-direction: column; 
+    }
+
+    .container > div.menu ul li ul li {
+        list-style: none;
+        background-color: #D32F2F;
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+    }
+
+    .container > div.menu ul li ul li a {
+        padding: 10px;
+        white-space: nowrap;
+        text-decoration: none;
+        color: #FFFFFF;
+        width: 100%;
+        text-align: center; 
+    }
+
+    .container > div.menu ul li ul li:hover {
+        background: #FF5722;
+    }
+
+    .container > div.menu ul li:hover ul {
+        visibility: visible;
+        opacity: 1;
+    }
+/*-------------------einde menu--------------------*/
+
+.container > div.main {
+    grid-area: main;
+    background-color: #f4fad7;
+    overflow: auto;
+}
+
+.container > div.reclame_links {
+    grid-area: reclame_links;
+}
+
+.container > div.reclame_links > img {
+    width: 100%;
+    height: auto; 
+}
+
+.container > div.reclame_rechts {
+    grid-area: reclame_rechts;
+}
+
+.media_uiting {
+    box-sizing: border-box;
+   
+    height: auto; 
+    background: rgba(255, 152, 0, 1);
+    border: 2px dashed rgba(211, 47, 47, 1);
+    padding: 5px;
+  }
+
+.container > div.footer {
+    grid-area: footer;
+    background-color: #D32F2F;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container > div.footer a{
+        text-decoration: underline;
+        color: #FFFFFF; 
+        margin-left: 0.5em;
+}
+
+.reclame{
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    flex-direction: column; 
+    row-gap: 10px;
+    padding: 10px;
+}
+.aandacht{
+    display: inline-block;
+    animation: aandacht 0.3s infinite;
+    
+}
+
+@keyframes aandacht {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(5px, 5px) rotate(5deg); }
+    50% { transform: translate(0, 0) rotate(0eg); }
+    75% { transform: translate(-5px, 5px) rotate(-5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
