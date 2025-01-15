@@ -1,23 +1,49 @@
 <?php
 session_start();
-session_destroy();
-session_start();
+
+
 $bericht = '';
 require_once('db_connectie.php');
 require_once('functions.php');
 $db = '';
 
-if(isset($_POST['cmdBestel'])){
-    vernieuwWinkelmand();
+
+if(isset($_POST['cmdWinkelmandje'])){
+
+    if($_POST['cmdWinkelmandje'] == "Update bestelling"){
+        session_unset();
+        $dataWinkelmandje = $_POST['winkelmandje'];
+        foreach($dataWinkelmandje as $productnaam => $aantal){
+            if($aantal > 0){
+            $_SESSION['winkelmandje'][$productnaam] = $aantal;
+            }
+        }
+    } else{
+        //code om de bestelling te plaatsen
+        $voornaam = $_POST['voornaam'];
+        $adres = $_POST['adres'];
+        $bestelling = $_POST['winkelmandje'];
+        if($bestelling == $_SESSION['winkelmandje']){
+
+            //wanneer niemand is ingelogd
+            $sql = "INSERT INTO Pizza_Order
+    (client_username, client_name, personnel_username, datetime, status, address)
+    VALUES(NULL, $voornaam, 'wbos', datetime(), '1', $adres);";
+
+            $db = maakVerbinding();
+            $query = $db->prepare($sql);
+            $query->execute([]);
+        }
+    }
 }
 
+/*
 //opbouw van tijdelijke sessiegegevens.
 $_SESSION['winkelmandje']['Coca Cola'] = 4;
 $_SESSION['winkelmandje']['Sprite'] = 3;
 $_SESSION['winkelmandje']['Knoflookbrood'] = 1;
 
 
-/*
 Winkelmandje uit sessie op basis van string
 
 $winkelmandje = "Coca Cola-4,Sprite-3,Knofloopbrood-1";
@@ -73,7 +99,7 @@ foreach($dataWinkelmandje as $productnaam => $aantal){
     $viewWinkelmandItems .= '
             <tr>
                 <td><img src="https://placehold.co/200x180/png" alt="'.$productnaam.'"> Informatie en iets over de '.$productnaam.'</td>
-                <td><input type="number" name="[winkelmandje]['.$productnaam.']" value="'.$aantal.'"></td>
+                <td><input type="number" name="winkelmandje['.$productnaam.']" value="'.$aantal.'"></td>
                 <td>'.moneyformat($productInformatie['price']).'</td>
                 <td>'.moneyformat($subtotaal).'</td>
             </tr>
@@ -111,7 +137,8 @@ $viewWinkelmand .= '
 
                 <input type="text" name="voornaam" placeholder="Voornaam">
         <input type="text" name="adres" placeholder="6511JB, 11">
-        <input type="submit" name="cmdBestel" value="Plaats bestelling">
+        <input type="submit" name="cmdWinkelmandje" value="Update bestelling">
+        <input type="submit" name="cmdWinkelmandje" value="Plaats bestelling">
        </form>
 ';
 
