@@ -8,4 +8,9 @@ function getProductInformatie($productnaam, $db){
     //nog geen foutafhandeling
     return $productInformatie;
 }
+
+function moneyformat($value){
+    $newValue = '&euro; ' . number_format($value, 2, ',', ' ' );
+    return $newValue;
+}
 ?>

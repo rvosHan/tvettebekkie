@@ -7,6 +7,9 @@ require_once('db_connectie.php');
 require_once('functions.php');
 $db = '';
 
+if(isset($_POST['cmdBestel'])){
+    vernieuwWinkelmand();
+}
 
 //opbouw van tijdelijke sessiegegevens.
 $_SESSION['winkelmandje']['Coca Cola'] = 4;
@@ -58,6 +61,7 @@ if(isset($_SESSION['winkelmandje'])){
 //hier komt code als er wel iets in het winkelmandje staat.
 $db = maakVerbinding();
 
+$viewWinkelmand = '';
 $viewWinkelmandItems = '';
 $totaalPrijs = 0;
 
@@ -69,9 +73,9 @@ foreach($dataWinkelmandje as $productnaam => $aantal){
     $viewWinkelmandItems .= '
             <tr>
                 <td><img src="https://placehold.co/200x180/png" alt="'.$productnaam.'"> Informatie en iets over de '.$productnaam.'</td>
-                <td><input type="number" name="aantal_p_1" value="'.$aantal.'"></td>
-                <td>'.$productInformatie['price'].'</td>
-                <td>'.$subtotaal.'</td>
+                <td><input type="number" name="[winkelmandje]['.$productnaam.']" value="'.$aantal.'"></td>
+                <td>'.moneyformat($productInformatie['price']).'</td>
+                <td>'.moneyformat($subtotaal).'</td>
             </tr>
     ';
     
@@ -79,7 +83,7 @@ foreach($dataWinkelmandje as $productnaam => $aantal){
 
 $btw = ($totaalPrijs /100 * 9);
 $viewWinkelmand .= '
-<form action="doeBestelling" method="post">
+<form action="winkelwagen.php" method="post">
         <table>
             <tr>
                 <th>Product</th>
@@ -91,15 +95,15 @@ $viewWinkelmand .= '
             <tr><td colspan="4" style="background-color: #D32F2F;"></td></tr>
             <tr>
                 <td colspan="3" style="text-align: right;">Subtotaal : </td>
-                <td>'.($totaalPrijs - $btw).'</td>
+                <td>'.moneyformat(($totaalPrijs - $btw)).'</td>
             </tr>
             <tr>
                 <td colspan="3" style="text-align: right;">BTW : </td>
-                <td>'.$btw.'</td>
+                <td>'.moneyformat($btw).'</td>
             </tr>
             <tr>
                 <td colspan="3" style="text-align: right;">Totaal : </td>
-                <td style="background-color: #D32F2F;  font-weight: 700;">'.$totaalPrijs.'</td>
+                <td style="background-color: #D32F2F;  font-weight: 700;">'.moneyformat($totaalPrijs).'</td>
             </tr>
             <tr><td colspan="4" style="background-color: #D32F2F;"></td></tr>
 
