@@ -1,5 +1,7 @@
 <?php
 session_start();
+session_destroy();
+session_start();
 $bericht = '';
 require_once('db_connectie.php');
 require_once('functions.php');
@@ -7,7 +9,7 @@ $db = '';
 
 
 //opbouw van tijdelijke sessiegegevens.
-$_SESSION['winkelmandje']['Coca-Cola'] = 4;
+$_SESSION['winkelmandje']['Coca Cola'] = 4;
 $_SESSION['winkelmandje']['Sprite'] = 3;
 $_SESSION['winkelmandje']['Knoflookbrood'] = 1;
 
@@ -56,24 +58,27 @@ if(isset($_SESSION['winkelmandje'])){
 //hier komt code als er wel iets in het winkelmandje staat.
 $db = maakVerbinding();
 
-$viewWinkelmand = '<table>';
+$viewWinkelmandItems = '';
+$totaalPrijs = 0;
 
 $dataWinkelmandje = $_SESSION['winkelmandje'];
 foreach($dataWinkelmandje as $productnaam => $aantal){
     $productInformatie = getProductInformatie($productnaam, $db);
-    $viewWinkelmand .= '
+    $subtotaal = ($aantal * $productInformatie['price']);
+    $totaalPrijs = $totaalPrijs + $subtotaal;
+    $viewWinkelmandItems .= '
             <tr>
                 <td><img src="https://placehold.co/200x180/png" alt="'.$productnaam.'"> Informatie en iets over de '.$productnaam.'</td>
                 <td><input type="number" name="aantal_p_1" value="'.$aantal.'"></td>
-                <td>'.$productInformatie['prijs'].'</td>
-                <td>'.($aantal * $productInformatie['price']).'</td>
+                <td>'.$productInformatie['price'].'</td>
+                <td>'.$subtotaal.'</td>
             </tr>
     ';
     
 }
-$viewWinkelmand .= '</table>';
-$bericht = $viewWinkelmand;
-/*
+
+$btw = ($totaalPrijs /100 * 9);
+$viewWinkelmand .= '
 <form action="doeBestelling" method="post">
         <table>
             <tr>
@@ -82,30 +87,19 @@ $bericht = $viewWinkelmand;
                 <th>Prijs</th>
                 <th>Subtotaal</th>
             </tr>
-            <tr>
-                <td><img src="https://placehold.co/200x180/png"> Informatie en iets over de pizza-hawai</td>
-                <td><input type="number" name="aantal_p_1" value="8"></td>
-                <td>8,95</td>
-                <td>71,60</td>
-            </tr>
-            <tr>
-                <td><img src="https://placehold.co/200x180/png"> Informatie en iets over kapsalon</td>
-                <td><input type="number" name="aantal_p_2" value="2"></td>
-                <td>11,-</td>
-                <td>22,-</td>
-            </tr>
+            '.$viewWinkelmandItems.'
             <tr><td colspan="4" style="background-color: #D32F2F;"></td></tr>
             <tr>
                 <td colspan="3" style="text-align: right;">Subtotaal : </td>
-                <td>85,17</td>
+                <td>'.($totaalPrijs - $btw).'</td>
             </tr>
             <tr>
                 <td colspan="3" style="text-align: right;">BTW : </td>
-                <td>8,42</td>
+                <td>'.$btw.'</td>
             </tr>
             <tr>
                 <td colspan="3" style="text-align: right;">Totaal : </td>
-                <td style="background-color: #D32F2F;  font-weight: 700;">93,6-</td>
+                <td style="background-color: #D32F2F;  font-weight: 700;">'.$totaalPrijs.'</td>
             </tr>
             <tr><td colspan="4" style="background-color: #D32F2F;"></td></tr>
 
@@ -115,7 +109,9 @@ $bericht = $viewWinkelmand;
         <input type="text" name="adres" placeholder="6511JB, 11">
         <input type="submit" name="cmdBestel" value="Plaats bestelling">
        </form>
-*/
+';
+
+$bericht = $viewWinkelmand;
 }
 else{
 //hier is de winkelmand leeg.
